@@ -9,6 +9,8 @@ const authOption = {
   session: { strategy: "jwt" },
   providers: [
     CredentialsProvider({
+      type: "credentials",
+      credentials: {},
       async authorize(credentials, req) {
         try {
           await connectDb();
@@ -20,7 +22,7 @@ const authOption = {
         if (!email || !password) {
           throw new Error("Invalid Data");
         }
-        const user = await User.findOne({ email:email });
+        const user = await User.findOne({ email: email });
         if (!user) {
           throw new Error("Email Not Exist");
         }
@@ -31,6 +33,10 @@ const authOption = {
       },
     }),
   ],
+  pages: {
+    signIn: "/login",
+  },
+  secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
 };
 
 export default NextAuth(authOption);
